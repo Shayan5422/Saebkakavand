@@ -1,0 +1,65 @@
+[
+  {
+    "check": "unauthenticated read",
+    "status": 401,
+    "pass": true
+  },
+  {
+    "check": "cross-origin login blocked",
+    "status": 403,
+    "pass": true
+  },
+  {
+    "check": "authenticated login",
+    "status": 200,
+    "pass": true
+  },
+  {
+    "check": "create persistent draft",
+    "status": 200,
+    "pass": true
+  },
+  {
+    "check": "draft excluded from homepage",
+    "pass": true
+  },
+  {
+    "check": "draft article returns 404",
+    "status": 404,
+    "pass": true
+  },
+  {
+    "check": "stale edit prevented",
+    "status": 409,
+    "pass": true
+  },
+  {
+    "check": "published content visible immediately",
+    "pass": true
+  },
+  {
+    "check": "published article accessible",
+    "status": 200,
+    "pass": true
+  },
+  {
+    "check": "cross-origin content update blocked",
+    "status": 403,
+    "pass": true
+  },
+  {
+    "check": "original restored",
+    "status": 200,
+    "pass": true
+  },
+  {
+    "check": "image upload and retrieval preserve bytes",
+    "status": 200,
+    "pass": true
+  },
+  {
+    "check": "fake image rejected",
+    "status": 400,
+    "pass": true
+  }
+]
