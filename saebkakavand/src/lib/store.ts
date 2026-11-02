@@ -3,9 +3,11 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import postgres from 'postgres';
 import { seed } from './seed';
+import { normalizeContent } from './content';
 import type { Content } from './types';
 
-const dataDir = path.join(process.cwd(), '.data');
+export const localDataDir = process.env.SAEB_LOCAL_DATA_DIR || path.join(process.cwd(), '.data');
+const dataDir = localDataDir;
 const file = path.join(dataDir, 'content.json');
 const databaseUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
 export const sql = databaseUrl ? postgres(databaseUrl, {max: 1, prepare: false, connect_timeout: 10}) : null;
@@ -14,15 +16,16 @@ export class StoreError extends Error { constructor(message: string, public stat
 export async function readContent(): Promise<Content> {
   if (sql) {
     const rows = await sql`SELECT data, revision FROM site_content WHERE id = 'main'`;
-    if (!rows.length) return structuredClone(seed);
-    return {...rows[0].data, revision:rows[0].revision};
+    if (!rows.length) return normalizeContent(structuredClone(seed));
+    return normalizeContent({...rows[0].data, revision:rows[0].revision});
   }
-  if (isHosted) return structuredClone(seed);
-  try { return JSON.parse(await fs.readFile(file, 'utf8')); }
-  catch (e) { if ((e as NodeJS.ErrnoException).code === 'ENOENT') return structuredClone(seed); throw e; }
+  if (isHosted) return normalizeContent(structuredClone(seed));
+  try { return normalizeContent(JSON.parse(await fs.readFile(file, 'utf8'))); }
+  catch (e) { if ((e as NodeJS.ErrnoException).code === 'ENOENT') return normalizeContent(structuredClone(seed)); throw e; }
 }
 let queue = Promise.resolve();
-export async function writeContent(content: Content): Promise<Content> {
+export async function writeContent(input: Content): Promise<Content> {
+  const content = normalizeContent(input);
   if (!sql && isHosted) throw new StoreError('ذخیره‌سازی هنوز راه‌اندازی نشده است. اتصال پایگاه‌داده را در تنظیمات استقرار تکمیل کنید.');
   if (sql) {
     const value = {...content, revision:content.revision + 1};

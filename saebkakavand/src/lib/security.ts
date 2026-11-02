@@ -36,3 +36,12 @@ export function safeUrl(value: unknown, local = false): boolean {
   if (local && /^\/(?!\/)[a-zA-Z0-9/_\-.]+$/.test(value)) return true;
   try {const u=new URL(value); return u.protocol==='https:' && !u.username && !u.password;} catch {return false;}
 }
+export function safeLink(value:unknown):boolean {
+  if(typeof value!=='string'||/[\u0000-\u0020\\]/.test(value))return false;
+  if(!value)return true;
+  if(/^#[a-zA-Z][\w-]*$/.test(value))return true;
+  if(value.startsWith('/')){
+    try {const decoded=decodeURIComponent(value);return !decoded.startsWith('//')&&!decoded.includes('\\')&&new URL(value,'https://internal.invalid').origin==='https://internal.invalid';}catch{return false;}
+  }
+  return safeUrl(value);
+}
