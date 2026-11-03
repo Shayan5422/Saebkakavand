@@ -23,6 +23,4 @@ export const seed: Content = {
     {id:'post-3',slug:'discover-the-archive',title:'مسیر شنیدن؛ از یک قطعه تا یک آلبوم',category:'راهنمای شنیدن',excerpt:'یک آلبوم را می‌توان مانند یک سفر شنید؛ با شروع، فراز و فرود، و لحظه‌ای برای بازگشت.',body:'گاهی آشنایی با یک نوازنده از شنیدن یک قطعه آغاز می‌شود. اما یک آلبوم فرصت بیشتری برای همراه‌شدن می‌دهد؛ می‌توان تغییر حال‌وهوا، پیوند جمله‌ها و نسبت قطعه‌ها را در کنار هم شنید.\n\nدر بخش آثار این وب‌سایت، آلبوم‌ها و تک‌آهنگ‌های صائب کاکاوند گردآوری شده‌اند. هر اثر به صفحهٔ انتشار خود پیوند دارد تا اطلاعات و نسخهٔ کامل آن را از منبع اصلی دنبال کنید.\n\nاگر فرصت دارید، یک آلبوم را از ابتدا تا انتها بشنوید. گاهی قطعه‌ای که در شنیدن نخست کم‌رنگ‌تر بوده، در کنار بقیهٔ اثر معنای تازه‌ای پیدا می‌کند.',image:'/images/tar-portrait.jpg',date:'2026-11-01',published:true}
   ]
 };
-export function publicContent(content: Content): Content {
-  return {...content, releases:content.releases.filter(x=>x.published), photos:content.photos.filter(x=>x.published), posts:content.posts.filter(x=>x.published)};
-}
+export { visibleContent as publicContent } from './content';
